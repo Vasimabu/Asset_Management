@@ -1,0 +1,23 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header
+    h2 Return asset
+    p Receive an issued asset and record the reason.
+  section.panel.form-panel
+    form#returnForm
+      .form-grid
+        label Issued asset
+          select(name="issue_id" required)#returnIssue
+        label Return date
+          input(type="date" name="return_date" required)#returnDate
+        label Return reason
+          select(name="return_reason" required)
+            option(value="UPGRADE") Upgrade
+            option(value="REPAIR") Repair
+            option(value="RESIGNATION") Resignation
+            option(value="OTHER") Other
+        label Remarks
+          textarea(name="remarks" rows="3")
+      .form-actions
+        button.btn.primary(type="submit") Record return
+  script(src="/js/return.js")

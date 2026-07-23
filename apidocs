@@ -1,0 +1,77 @@
+API Endpoints
+Method	Endpoint	Purpose
+POST	/api/employees	Add Employee
+GET	/api/employees	View Employees
+GET	/api/employees?search=john	Search Employees
+GET	/api/employees?status=ACTIVE	Filter Active Employees
+GET	/api/employees?search=john&status=ACTIVE	Search + Filter
+GET	/api/employees/:id	View Employee
+PUT	/api/employees/:id	Edit Employee
+DELETE	/api/employees/:id	Delete Employee
+
+Asset API Endpoints
+Method	URL	Description
+POST	/api/assets	Create Asset
+GET	/api/assets	Get All Assets (with search/filter)
+GET	/api/assets/:id	Get Asset by ID
+PUT	/api/assets/:id	Update Asset
+DELETE	/api/assets/:id	Delete Asset (or soft delete)
+
+
+API URLs
+Method	URL	Description
+POST	/api/asset-categories	Create Category
+GET	/api/asset-categories	Get All Categories
+GET	/api/asset-categories/:id	Get Category By ID
+PUT	/api/asset-categories/:id	Update Category
+DELETE	/api/asset-categories/:id	Delete Category
+
+
+4. Stock View Module
+API Endpoints
+Method	URL	Description
+GET	/api/stocks	Get all available stock
+GET	/api/stocks/branch/:branchId	Stock by branch
+GET	/api/stocks/summary	Branch-wise stock summary
+
+5. Issue Asset Module
+API Endpoints
+Method	URL
+POST	/api/asset-issues
+GET	/api/asset-issues
+GET	/api/asset-issues/:id
+PUT	/api/asset-issues/:id
+DELETE	/api/asset-issues/:id
+
+6. Return Asset
+API
+Method	URL
+POST	/api/asset-returns
+GET	/api/asset-returns
+GET	/api/asset-returns/:id
+PUT	/api/asset-returns/:id
+DELETE	/api/asset-returns/:id
+
+7. Scrap Asset
+
+Instead of deleting an asset, update its status to SCRAPPED.
+
+API URLs
+Method	URL
+PUT	/api/assets/:id/scrap
+GET	/api/assets/scrapped
+
+8. Asset History
+
+Shows every event:
+
+Purchased
+Issued
+Returned
+Re-Issued
+Repaired
+Scrapped
+API URLs
+Method	URL
+GET	/api/asset-history
+GET	/api/asset-history/:assetId

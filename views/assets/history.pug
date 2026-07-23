@@ -1,0 +1,14 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header
+    h2 Asset history
+    p Complete lifecycle records from purchase to scrap.
+  section.panel
+    .filters
+      input#historyAssetId(type="search" placeholder="Optional asset UUID")
+      button.btn.secondary#historySearch(type="button") Search
+    .table-wrap
+      table
+        thead: tr: th Date: th Asset: th Employee: th Action: th Remarks
+        tbody#historyTable
+  script(src="/js/history.js")

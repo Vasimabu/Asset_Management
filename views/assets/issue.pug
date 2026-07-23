@@ -1,0 +1,25 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header
+    h2 Issue asset
+    p Allocate an available asset to an active employee.
+  section.panel.form-panel
+    form#issueForm
+      .form-grid
+        label Available asset
+          select(name="asset_id" required)#issueAsset
+        label Employee
+          select(name="employee_id" required)#issueEmployee
+        label Issue date
+          input(type="date" name="issue_date" required)#issueDate
+        label Expected return date
+          input(type="date" name="expected_return_date")
+      .form-actions
+        button.btn.primary(type="submit") Issue asset
+  section.panel
+    h3 Current and past issues
+    .table-wrap
+      table
+        thead: tr: th Asset: th Employee: th Issue date: th Expected return
+        tbody#issueTable
+  script(src="/js/issue.js")

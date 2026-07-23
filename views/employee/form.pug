@@ -1,0 +1,24 @@
+﻿section.panel.form-panel
+  form#employeeForm
+    .form-grid
+      label Employee code
+        input(name="employee_code" required maxlength="20")
+      label First name
+        input(name="first_name" required)
+      label Last name
+        input(name="last_name")
+      label Email
+        input(type="email" name="email")
+      label Mobile
+        input(type="tel" name="mobile")
+      label Designation
+        input(name="designation")
+      label Branch ID
+        input(name="branch_id" required placeholder="Branch UUID")
+      label Status
+        select(name="status")
+          option(value="ACTIVE") Active
+          option(value="INACTIVE") Inactive
+    .form-actions
+      a.btn.secondary(href="/employees") Cancel
+      button.btn.primary(type="submit") Save employee

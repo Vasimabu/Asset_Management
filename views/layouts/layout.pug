@@ -1,0 +1,41 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title AssetFlow | Asset Management
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css")
+    link(rel="stylesheet" href="/css/style.css")
+  body
+    .app-shell
+      aside.sidebar
+        a.brand(href="/")
+          span.brand-mark AF
+          span AssetFlow
+        nav
+          a(href="/" class="nav-link") Dashboard
+          .nav-label Masters
+          a(href="/employees" class="nav-link") Employees
+          a(href="/assets" class="nav-link") Assets
+          a(href="/asset-categories" class="nav-link") Asset Categories
+          .nav-label Operations
+          a(href="/stock" class="nav-link") Stock View
+          a(href="/asset-issues" class="nav-link") Issue Asset
+          a(href="/asset-returns" class="nav-link") Return Asset
+          .nav-label Reports
+          a(href="/asset-history" class="nav-link") Asset History
+          a(href="/assets/scrapped" class="nav-link") Scrapped Assets
+      main.main-content
+        header.topbar
+          div
+            p.eyebrow Asset management system
+            h1#pageTitle AssetFlow
+          .user-badge
+            i.bi.bi-person-circle
+            span Administrator
+        #toast.toast(role="status")
+        block content
+    script(src="/js/common.js")

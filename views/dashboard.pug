@@ -1,0 +1,54 @@
+extends layouts/layout
+block content
+  link(rel="stylesheet" href="/css/dashboard.css")
+  .container-fluid.px-0
+    nav(aria-label="breadcrumb")
+      ol.breadcrumb.mb-4
+        li.breadcrumb-item.active Dashboard
+    .d-flex.justify-content-between.align-items-center.mb-4
+      div
+        h2.mb-1 Dashboard
+        p.text-secondary.mb-0 Operational overview across your asset estate.
+      a.btn.btn-primary(href="/assets/new")
+        i.bi.bi-plus-lg.me-1
+        | Add Asset
+    .row.g-3.mb-4
+      each item in [{id:'totalEmployees',label:'Total Employees',icon:'people',color:'primary'},{id:'totalAssets',label:'Total Assets',icon:'boxes',color:'info'},{id:'availableAssets',label:'Available Assets',icon:'check-circle',color:'success'},{id:'issuedAssets',label:'Issued Assets',icon:'box-arrow-up-right',color:'warning'},{id:'returnedAssets',label:'Returned Assets',icon:'arrow-return-left',color:'secondary'},{id:'scrappedAssets',label:'Scrapped Assets',icon:'trash3',color:'danger'}]
+        .col-sm-6.col-xl-4
+          .card.metric-card.shadow-sm.h-100
+            .card-body.d-flex.align-items-center.gap-3
+              .metric-icon(class='text-bg-'+item.color)
+                i(class='bi bi-'+item.icon)
+              div
+                .small.text-secondary= item.label
+                h3.mb-0(id=item.id) —
+    .row.g-4
+      .col-lg-7
+        .card.shadow-sm.h-100
+          .card-header.bg-white.d-flex.justify-content-between.align-items-center
+            h5.mb-0 Recent Activity
+            a.small(href="/asset-history") View history
+          .card-body.p-0
+            .table-responsive
+              table.table.table-hover.align-middle.mb-0
+                thead.table-light
+                  tr
+                    th Activity
+                    th Asset
+                    th Date
+                    th Status
+                tbody#recentActivityTable
+      .col-lg-5
+        .card.shadow-sm.h-100
+          .card-header.bg-white
+            h5.mb-0 Branch Summary
+          .card-body.p-0
+            .table-responsive
+              table.table.table-hover.align-middle.mb-0
+                thead.table-light
+                  tr
+                    th Branch
+                    th Available
+                    th Total
+                tbody#branchSummaryTable
+  script(src="/js/dashboard.js")

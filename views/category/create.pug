@@ -1,0 +1,16 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header
+    h2 Add asset category
+    p Examples: Laptop, Mobile Phone, Drill Machine.
+  section.panel.form-panel
+    form#categoryForm
+      .form-grid
+        label Category name
+          input(name="category_name" required)
+        label Description
+          textarea(name="description" rows="4")
+      .form-actions
+        a.btn.secondary(href="/asset-categories") Cancel
+        button.btn.primary(type="submit") Save category
+  script(src="/js/category.js")

@@ -1,0 +1,15 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header.actions
+    div
+      h2 Asset category master
+      p Manage hardware and equipment types.
+    a.btn.primary(href="/asset-categories/new") + Add category
+  section.panel
+    .filters
+      input#categorySearch(type="search" placeholder="Search categories")
+    .table-wrap
+      table
+        thead: tr: th Category: th Description: th Created: th
+        tbody#categoryTable
+  script(src="/js/category.js")

@@ -1,0 +1,9 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header.actions
+    div
+      h2 Employee details
+      p View the selected employee record.
+    a.btn.secondary#editEmployeeLink Edit employee
+  section.panel#employeeDetails Loading employee details…
+  script(src="/js/employee.js")

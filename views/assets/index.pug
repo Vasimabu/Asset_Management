@@ -1,0 +1,21 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header.actions
+    div
+      h2 Asset master
+      p Search assets by asset ID, serial number, make or model.
+    a.btn.primary(href="/assets/new") + Add asset
+  section.panel
+    .filters
+      input#assetSearch(type="search" placeholder="Search asset, serial, make or model")
+      select#assetCategory: option(value="") All categories
+      select#assetStatus
+        option(value="") All statuses
+        option(value="AVAILABLE") Available
+        option(value="ISSUED") Issued
+        option(value="REPAIR") Repair
+    .table-wrap
+      table
+        thead: tr: th Asset: th Serial number: th Category: th Make / model: th Branch: th Status: th
+        tbody#assetTable
+  script(src="/js/asset.js")

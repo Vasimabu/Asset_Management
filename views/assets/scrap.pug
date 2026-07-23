@@ -1,0 +1,11 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header
+    h2 Scrapped assets
+    p Obsolete assets are retained here for reporting only.
+  section.panel
+    .table-wrap
+      table
+        thead: tr: th Asset: th Asset ID: th Serial number: th Make / model: th Value: th Status
+        tbody#scrapTable
+  script(src="/js/scrap.js")

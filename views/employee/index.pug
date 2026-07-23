@@ -1,0 +1,28 @@
+extends ../layouts/layout
+block content
+  link(rel="stylesheet" href="/css/employee.css")
+  .container-fluid.px-0
+    nav(aria-label="breadcrumb"): ol.breadcrumb: li.breadcrumb-item: a(href="/") Dashboard
+      li.breadcrumb-item.active Employees
+    .d-flex.flex-wrap.justify-content-between.align-items-center.gap-3.mb-4
+      h2.mb-0 Employee Master
+      a.btn.btn-primary(href="/employees/new") Add Employee
+    .card.shadow-sm: .card-body
+      form#employeeFilters.row.g-2.mb-4
+        .col-md-5: input#employeeSearch.form-control(type="search" placeholder="Search by ID, name or email")
+        .col-md-3: select#employeeStatus.form-select: option(value="") All statuses
+          option(value="ACTIVE") Active
+          option(value="INACTIVE") Inactive
+        .col-md-2: button.btn.btn-outline-primary.w-100(type="submit") Search
+      .table-responsive: table.table.table-hover.align-middle
+        thead.table-light: tr: th Employee ID: th Name: th Email: th Phone: th Branch: th Status: th.text-end Actions
+        tbody#employeeTable
+      #employeeSpinner.text-center.py-4.d-none: .spinner-border.text-primary
+      nav: ul.pagination.justify-content-end.mb-0#employeePagination
+  .modal.fade#deleteEmployeeModal(tabindex="-1"): .modal-dialog.modal-dialog-centered: .modal-content
+    .modal-header: h5.modal-title Confirm deletion
+      button.btn-close(type="button" data-bs-dismiss="modal")
+    .modal-body This employee will be permanently removed.
+    .modal-footer: button.btn.btn-light(type="button" data-bs-dismiss="modal") Cancel
+      button#confirmDeleteEmployee.btn.btn-danger(type="button") Delete employee
+  script(src="/js/employee.js")

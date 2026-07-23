@@ -1,0 +1,17 @@
+extends ../layouts/layout
+block content
+  link(rel="stylesheet" href="/css/employee.css")
+  .container-fluid.px-0
+    h2.mb-4 Add Employee
+    .card.shadow-sm.form-card: .card-body
+      form#employeeForm.needs-validation(novalidate)
+        .row.g-3
+          each f in [{n:'employee_id',l:'Employee ID',t:'text'},{n:'name',l:'Full name',t:'text'},{n:'email',l:'Email',t:'email'},{n:'phone',l:'Phone',t:'text'},{n:'branch',l:'Branch',t:'text'}]
+            .col-md-6: label.form-label= f.l
+              input.form-control(type=f.t name=f.n required)
+          .col-md-6: label.form-label Status
+            select.form-select(name="status"): option(value="ACTIVE") Active
+              option(value="INACTIVE") Inactive
+        .mt-4.d-flex.gap-2: button.btn.btn-primary(type="submit") Save Employee
+          a.btn.btn-light(href="/employees") Cancel
+  script(src="/js/employee.js")

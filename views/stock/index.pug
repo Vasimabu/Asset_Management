@@ -1,0 +1,18 @@
+﻿extends ../layouts/layout
+block content
+  section.page-header
+    h2 Stock view
+    p Assets available to issue, grouped by branch.
+  section.panel
+    .table-wrap
+      table
+        thead: tr: th Asset: th Asset ID: th Serial number: th Branch: th Category: th Value
+        tbody#stockTable
+        tfoot: tr: th(colspan="5") Total stock value: th#stockTotal —
+  section.panel
+    h3 Branch summary
+    .table-wrap
+      table
+        thead: tr: th Branch: th Assets in stock: th Total value
+        tbody#stockSummaryTable
+  script(src="/js/stock.js")
