@@ -6,23 +6,6 @@ const isUuid = (str) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-
 exports.getHistory = async (search) => {
     let whereClause = {};
 
-    // if (search) {
-    //     whereClause = {
-    //         [Op.or]: [
-    //             // { action: { [Op.iLike]: `%${search}%` } },
-    //             { remarks: { [Op.iLike]: `%${search}%` } },
-
-    //             { '$Asset.asset_name$': { [Op.iLike]: `%${search}%` } },
-    //             { '$Asset.asset_id$': { [Op.iLike]: `%${search}%` } },
-    //             { '$Asset.serial_number$': { [Op.iLike]: `%${search}%` } },
-
-    //             { '$Employee.first_name$': { [Op.iLike]: `%${search}%` } },
-    //             { '$Employee.last_name$': { [Op.iLike]: `%${search}%` } },
-    //             { '$Employee.employee_code$': { [Op.iLike]: `%${search}%` } }
-    //         ]
-    //     };
-    // }
-
     const { Op, Sequelize } = require("sequelize");
 if (search) {
 whereClause = {
