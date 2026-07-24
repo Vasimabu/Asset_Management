@@ -14,6 +14,7 @@ block content
           input(name="serial_number" required)
         label Category
           select(name="category_id" required)#assetCategorySelect
+            option(value="") Select category
         label Make
           input(name="make")
         label Model
@@ -22,8 +23,9 @@ block content
           input(type="date" name="purchase_date")
         label Purchase cost
           input(type="number" name="purchase_cost" min="0" step="0.01")
-        label Branch ID
-          input(name="branch_id" required placeholder="Branch UUID")
+        label Branch
+          select(name="branch_id" required)#assetBranchSelect
+            option(value="") Select branch
         label Status
           select(name="status")
             option(value="AVAILABLE") Available

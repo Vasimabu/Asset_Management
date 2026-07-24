@@ -1,4 +1,4 @@
-const { Asset, Branch } = require("../models");
+const { Asset, Branch, AssetCategory } = require("../models");
 
 exports.getStock = async () => {
 
@@ -6,7 +6,7 @@ exports.getStock = async () => {
         where: {
             status: "AVAILABLE"
         },
-        include: [Branch]
+        include: [Branch, AssetCategory]
     });
 
 };
@@ -18,7 +18,7 @@ exports.getStockByBranch = async (branchId) => {
             branch_id: branchId,
             status: "AVAILABLE"
         },
-        include: [Branch]
+        include: [Branch, AssetCategory]
     });
 
 };

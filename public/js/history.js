@@ -1,1 +1,77 @@
-document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".needs-validation").forEach(f=>f.addEventListener("submit",e=>{if(!f.checkValidity()){e.preventDefault();e.stopPropagation()}f.classList.add("was-validated")}))}); const request=async(url,options={})=>{const r=await fetch(url,{headers:{"Content-Type":"application/json",...(options.headers||{})},...options});if(!r.ok)throw new Error("Request failed");return r.json()}; async function loadDashboard(){return request("/api/stocks/summary")} async function loadRecentActivity(){return request("/api/asset-history")} async function loadBranchSummary(){return request("/api/stocks")} async function loadEmployees(){return request("/api/employees")} async function searchEmployees(){return loadEmployees()} async function addEmployee(data){return request("/api/employees",{method:"POST",body:JSON.stringify(data)})} async function updateEmployee(id,data){return request("/api/employees/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteEmployee(id){return request("/api/employees/"+id,{method:"DELETE"})} async function viewEmployee(id){return request("/api/employees/"+id)} async function loadCategories(){return request("/api/asset-categories")} async function searchCategories(){return loadCategories()} async function createCategory(data){return request("/api/asset-categories",{method:"POST",body:JSON.stringify(data)})} async function updateCategory(id,data){return request("/api/asset-categories/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteCategory(id){return request("/api/asset-categories/"+id,{method:"DELETE"})} async function loadAssets(){return request("/api/assets")} async function searchAssets(){return loadAssets()} async function viewAsset(id){return request("/api/assets/"+id)} async function createAsset(data){return request("/api/assets",{method:"POST",body:JSON.stringify(data)})} async function updateAsset(id,data){return request("/api/assets/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteAsset(id){return request("/api/assets/"+id,{method:"DELETE"})} async function loadStock(){return request("/api/stocks")} async function searchEmployee(){return request("/api/employees")} async function searchAsset(){return request("/api/assets")} async function issueAsset(data){return request("/api/asset-issues",{method:"POST",body:JSON.stringify(data)})} async function loadIssuedAssets(){return request("/api/asset-issues")} async function returnAsset(data){return request("/api/asset-returns",{method:"POST",body:JSON.stringify(data)})} async function scrapAsset(id,data){return request("/api/assets/"+id+"/scrap",{method:"PUT",body:JSON.stringify(data)})} async function loadAssetHistory(id){return request("/api/asset-history/"+id)} async function searchHistory(){return request("/api/asset-history")}
+const request = async (url, options = {}) => {
+  const response = await fetch(url, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) throw new Error(result.message || "Request failed");
+  return result;
+};
+
+const text = (value) => value ?? "—";
+
+const renderHistory = (history) => {
+  const table = document.getElementById("historyTable");
+  if (!table) return;
+  table.replaceChildren();
+
+  if (!history || !history.length) {
+    const row = table.insertRow();
+    const cell = row.insertCell();
+    cell.colSpan = 5;
+    cell.className = "empty";
+    cell.textContent = "No history recorded.";
+    return;
+  }
+
+  history.forEach((item) => {
+    const row = table.insertRow();
+    const assetName = item.Asset?.asset_name || item.Asset?.asset_id || "—";
+    const empName = item.Employee ? `${item.Employee.first_name || ""} ${item.Employee.last_name || ""}`.trim() : "—";
+
+    const dateCell = row.insertCell();
+    dateCell.textContent = fmtDate(item.createdAt || item.action_date);
+
+    const assetCell = row.insertCell();
+    assetCell.innerHTML = `<strong>${esc(assetName)}</strong>`;
+
+    const empCell = row.insertCell();
+    empCell.textContent = text(empName);
+
+    const actionCell = row.insertCell();
+    actionCell.textContent = text(item.action);
+
+    const remarksCell = row.insertCell();
+    remarksCell.textContent = text(item.remarks);
+  });
+};
+
+// const loadHistory = async (assetId = "") => {
+//   const url = assetId ? `/api/asset-history/${encodeURIComponent(assetId)}` : "/api/asset-history";
+//   const { data } = await request(url);
+//   renderHistory(Array.isArray(data) ? data : (data ? [data] : []));
+// };
+
+const loadHistory = async (search = "") => {
+
+    const url = search
+        ? `/api/asset-history?search=${encodeURIComponent(search)}`
+        : "/api/asset-history";
+
+    const { data } = await request(url);
+
+    renderHistory(data);
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const searchBtn = document.getElementById("historySearch");
+  const input = document.getElementById("historyAssetId");
+
+  if (searchBtn && input) {
+    searchBtn.addEventListener("click", () => {
+      loadHistory(input.value.trim()).catch((err) => alert(err.message));
+    });
+  }
+
+  loadHistory().catch((err) => console.error("History load error:", err));
+});

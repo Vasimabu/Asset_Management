@@ -1,1 +1,153 @@
-document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".needs-validation").forEach(f=>f.addEventListener("submit",e=>{if(!f.checkValidity()){e.preventDefault();e.stopPropagation()}f.classList.add("was-validated")}))}); const request=async(url,options={})=>{const r=await fetch(url,{headers:{"Content-Type":"application/json",...(options.headers||{})},...options});if(!r.ok)throw new Error("Request failed");return r.json()}; async function loadDashboard(){return request("/api/stocks/summary")} async function loadRecentActivity(){return request("/api/asset-history")} async function loadBranchSummary(){return request("/api/stocks")} async function loadEmployees(){return request("/api/employees")} async function searchEmployees(){return loadEmployees()} async function addEmployee(data){return request("/api/employees",{method:"POST",body:JSON.stringify(data)})} async function updateEmployee(id,data){return request("/api/employees/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteEmployee(id){return request("/api/employees/"+id,{method:"DELETE"})} async function viewEmployee(id){return request("/api/employees/"+id)} async function loadCategories(){return request("/api/asset-categories")} async function searchCategories(){return loadCategories()} async function createCategory(data){return request("/api/asset-categories",{method:"POST",body:JSON.stringify(data)})} async function updateCategory(id,data){return request("/api/asset-categories/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteCategory(id){return request("/api/asset-categories/"+id,{method:"DELETE"})} async function loadAssets(){return request("/api/assets")} async function searchAssets(){return loadAssets()} async function viewAsset(id){return request("/api/assets/"+id)} async function createAsset(data){return request("/api/assets",{method:"POST",body:JSON.stringify(data)})} async function updateAsset(id,data){return request("/api/assets/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteAsset(id){return request("/api/assets/"+id,{method:"DELETE"})} async function loadStock(){return request("/api/stocks")} async function searchEmployee(){return request("/api/employees")} async function searchAsset(){return request("/api/assets")} async function issueAsset(data){return request("/api/asset-issues",{method:"POST",body:JSON.stringify(data)})} async function loadIssuedAssets(){return request("/api/asset-issues")} async function returnAsset(data){return request("/api/asset-returns",{method:"POST",body:JSON.stringify(data)})} async function scrapAsset(id,data){return request("/api/assets/"+id+"/scrap",{method:"PUT",body:JSON.stringify(data)})} async function loadAssetHistory(id){return request("/api/asset-history/"+id)} async function searchHistory(){return request("/api/asset-history")}
+const request = async (url, options = {}) => {
+  const response = await fetch(url, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) throw new Error(result.message || "Request failed");
+  return result;
+};
+
+const text = (value) => value ?? "—";
+
+const loadCategoriesDropdown = async (selectElement, defaultLabel = "Select category") => {
+  if (!selectElement) return;
+  try {
+    const { data: categories } = await request("/api/asset-categories");
+    selectElement.replaceChildren(new Option(defaultLabel, ""));
+    (categories || []).forEach((cat) => {
+      selectElement.add(new Option(cat.category_name, cat.id));
+    });
+  } catch (err) {
+    console.error("Failed to load categories:", err);
+  }
+};
+
+const loadBranchesDropdown = async (selectElement) => {
+  if (!selectElement) return;
+  try {
+    const { data: branches } = await request("/api/branches");
+    selectElement.replaceChildren(new Option("Select branch", ""));
+    (branches || []).forEach((branch) => {
+      selectElement.add(new Option(branch.branch_name, branch.id));
+    });
+  } catch (err) {
+    console.error("Failed to load branches:", err);
+  }
+};
+
+const renderAssets = (assets) => {
+  const table = document.getElementById("assetTable");
+  if (!table) return;
+  table.replaceChildren();
+
+  if (!assets || !assets.length) {
+    const row = table.insertRow();
+    const cell = row.insertCell();
+    cell.colSpan = 6;
+    cell.className = "empty";
+    cell.textContent = "No assets found.";
+    return;
+  }
+
+  assets.forEach((asset) => {
+    const row = table.insertRow();
+    const makeModel = [asset.make, asset.model].filter(Boolean).join(" / ") || "—";
+    const categoryName = asset.AssetCategory?.category_name || "—";
+    const branchName = asset.Branch?.branch_name || "—";
+
+    const nameCell = row.insertCell();
+    nameCell.innerHTML = `<strong>${esc(asset.asset_name || '')}</strong><br><small class="text-muted">${esc(asset.asset_id || '')}</small>`;
+
+    const serialCell = row.insertCell();
+    serialCell.textContent = text(asset.serial_number);
+
+    const categoryCell = row.insertCell();
+    categoryCell.textContent = text(categoryName);
+
+    const makeModelCell = row.insertCell();
+    makeModelCell.textContent = makeModel;
+
+    const branchCell = row.insertCell();
+    branchCell.textContent = text(branchName);
+
+    const statusCell = row.insertCell();
+    statusCell.innerHTML = status(asset.status);
+  });
+};
+
+const loadAssets = async (search = "", category = "", status = "") => {
+  const params = new URLSearchParams();
+  if (search) params.set("search", search);
+  if (category) params.set("category", category);
+  if (status) params.set("status", status);
+  const { data } = await request(`/api/assets?${params}`);
+  renderAssets(data);
+};
+
+const setupAssetList = () => {
+  const table = document.getElementById("assetTable");
+  if (!table) return;
+
+  const searchInput = document.getElementById("assetSearch");
+  const categorySelect = document.getElementById("assetCategory");
+  const statusSelect = document.getElementById("assetStatus");
+
+  loadCategoriesDropdown(categorySelect, "All categories");
+
+  const filterHandler = () => {
+    loadAssets(
+      searchInput?.value.trim() || "",
+      categorySelect?.value || "",
+      statusSelect?.value || ""
+    ).catch((err) => alert(err.message));
+  };
+
+  if (searchInput) searchInput.addEventListener("input", filterHandler);
+  if (categorySelect) categorySelect.addEventListener("change", filterHandler);
+  if (statusSelect) statusSelect.addEventListener("change", filterHandler);
+
+  loadAssets().catch((err) => alert(err.message));
+};
+
+const setupAssetForm = () => {
+  const form = document.getElementById("assetForm");
+  if (!form) return;
+
+  const categorySelect = document.getElementById("assetCategorySelect");
+  if (categorySelect) {
+    loadCategoriesDropdown(categorySelect, "Select category");
+  }
+
+  const branchSelect = document.getElementById("assetBranchSelect");
+  if (branchSelect) {
+    loadBranchesDropdown(branchSelect);
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) return;
+
+    const button = form.querySelector('button[type="submit"]');
+    try {
+      if (button) button.disabled = true;
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+
+      await request("/api/assets", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      location.assign("/assets");
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      if (button) button.disabled = false;
+    }
+  });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupAssetList();
+  setupAssetForm();
+});

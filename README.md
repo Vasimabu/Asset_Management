@@ -1,44 +1,115 @@
-# Asset Management System
+# 🚀 Asset Management System
 
-Asset Management System is a Node.js and Express.js REST API for managing employees, assets, asset categories, asset issuance, returns, and asset history.
-
-## Tech Stack
-
-- Node.js
-- Express.js
-- PostgreSQL
-- Sequelize ORM
-- Sequelize CLI
-- dotenv
+A full-stack Asset Management System built with **Node.js, Express.js, PostgreSQL, and Sequelize ORM** to efficiently manage employees, company assets, asset allocation, returns, stock tracking, and asset history.
 
 ---
 
-## Features
+## 📌 Features
 
-- Employee Management
-- Asset Category Management
-- Asset Management
-- Issue Assets
-- Return Assets
-- Asset History
-- Branch Management
-- REST APIs
+### 👨‍💼 Employee Management
+- Create Employee
+- Update Employee
+- Delete Employee
+- Search Employees
+- Employee Details
 
----
+### 🏢 Branch Management
+- Create Branch
+- Update Branch
+- Delete Branch
+- View Branch List
 
-## Project Structure
+### 📦 Asset Category Management
+- Create Asset Category
+- Update Asset Category
+- Delete Asset Category
+
+### 💻 Asset Management
+- Add Assets
+- Edit Assets
+- Delete Assets
+- Search Assets
+- Asset Availability Status
+
+### 📊 Stock Management
+- Available Assets
+- Issued Assets
+- Returned Assets
+- Scrapped Assets
+
+### 🔄 Asset Issue
+- Issue Asset to Employee
+- Prevent Duplicate Issue
+- Track Issue Date
+
+### ↩️ Asset Return
+- Return Issued Assets
+- Update Asset Status
+- Store Return Date
+
+### 📝 Asset History
+- Complete Asset Lifecycle
+- Purchase
+- Issue
+- Return
+- Scrap
+- Search Asset History
+
+### 📖 REST APIs
+
+All modules are exposed through RESTful APIs.
+
+### 📄 Swagger API Documentation
+
+Interactive API documentation available using Swagger UI.
 
 ```
-asset-management/
+http://localhost:3005/api-docs
+```
+
+Swagger JSON
+
+```
+http://localhost:3005/api-docs.json
+```
+
+---
+
+# 🛠 Tech Stack
+
+| Technology | Version |
+|------------|----------|
+| Node.js | 18+ |
+| Express.js | Latest |
+| PostgreSQL | Latest |
+| Sequelize ORM | Latest |
+| Swagger UI Express | Latest |
+| OpenAPI | 3.0 |
+| dotenv | Latest |
+
+---
+
+# 📁 Project Structure
+
+```
+asset-management
 │
 ├── config/
-├── controllers/
-├── middleware/
+├── controller/
 ├── migrations/
 ├── models/
+├── public/
+│   ├── css/
+│   └── js/
 ├── routes/
-├── services/
-├── seeders/
+├── service/
+├── views/
+│   ├── assets/
+│   ├── employee/
+│   ├── category/
+│   ├── stock/
+│   └── layouts/
+├── swagger.js
 ├── app.js
 ├── package.json
 ├── .env
@@ -47,18 +118,15 @@ asset-management/
 
 ---
 
-## Prerequisites
-
-- Node.js (v18 or later)
-- PostgreSQL
-- Git
-
----
+# ⚙️ Installation
 
 ## Clone Repository
 
 ```bash
 git clone https://github.com/Vasimabu/Asset_Management.git
+```
+
+```bash
 cd Asset_Management
 ```
 
@@ -72,12 +140,12 @@ npm install
 
 ---
 
-## Environment Variables
+# 🔧 Environment Variables
 
 Create a `.env` file in the project root.
 
 ```env
-PORT=5000
+PORT=3005
 
 DB_HOST=localhost
 DB_PORT=5432
@@ -88,17 +156,15 @@ DB_PASSWORD=your_password
 
 ---
 
-## Database Setup
+# 🗄 Database Setup
 
-Create a PostgreSQL database.
+Create PostgreSQL Database
 
 ```sql
 CREATE DATABASE asset_management;
 ```
 
----
-
-## Run Migrations
+Run Migrations
 
 ```bash
 npx sequelize-cli db:migrate
@@ -106,21 +172,15 @@ npx sequelize-cli db:migrate
 
 ---
 
-## Start Development Server
+# ▶️ Run Project
+
+Development
 
 ```bash
 npm run dev
 ```
 
-or
-
-```bash
-nodemon app.js
-```
-
----
-
-## Start Production Server
+Production
 
 ```bash
 npm start
@@ -128,35 +188,48 @@ npm start
 
 ---
 
-## API Base URL
+# 📚 API Documentation
+
+Open Swagger UI
 
 ```
-http://localhost:5000
+http://localhost:3005/api-docs
+```
+
+OpenAPI JSON
+
+```
+http://localhost:3005/api-docs.json
 ```
 
 ---
 
-## API Endpoints
+# 🌐 REST API Endpoints
 
-### Employees
+## Employees
 
 | Method | Endpoint |
 |---------|----------|
 | GET | /api/employees |
+| GET | /api/employees/:id |
 | POST | /api/employees |
 | PUT | /api/employees/:id |
 | DELETE | /api/employees/:id |
 
-### Assets
+---
+
+## Branches
 
 | Method | Endpoint |
 |---------|----------|
-| GET | /api/assets |
-| POST | /api/assets |
-| PUT | /api/assets/:id |
-| DELETE | /api/assets/:id |
+| GET | /api/branches |
+| POST | /api/branches |
+| PUT | /api/branches/:id |
+| DELETE | /api/branches/:id |
 
-### Asset Categories
+---
+
+## Asset Categories
 
 | Method | Endpoint |
 |---------|----------|
@@ -167,55 +240,98 @@ http://localhost:5000
 
 ---
 
-## Running Tests
+## Assets
 
-```bash
-npm test
-```
+| Method | Endpoint |
+|---------|----------|
+| GET | /api/assets |
+| POST | /api/assets |
+| PUT | /api/assets/:id |
+| DELETE | /api/assets/:id |
 
 ---
 
-## Git Workflow
+## Stock
+
+| Method | Endpoint |
+|---------|----------|
+| GET | /api/stocks |
+
+---
+
+## Asset Issue
+
+| Method | Endpoint |
+|---------|----------|
+| POST | /api/asset-issues |
+
+---
+
+## Asset Return
+
+| Method | Endpoint |
+|---------|----------|
+| POST | /api/asset-returns |
+
+---
+
+## Asset History
+
+| Method | Endpoint |
+|---------|----------|
+| GET | /api/asset-history |
+| GET | /api/asset-history/:assetId |
+
+---
+
+# 📸 Screenshots
+
+### Dashboard
+
+(Add Screenshot Here)
+
+### Swagger UI
+
+(Add Screenshot Here)
+
+### Employee Module
+
+(Add Screenshot Here)
+
+### Asset Module
+
+(Add Screenshot Here)
+
+---
+
+# 🔄 Git Workflow
 
 ```bash
-git pull origin main
+git clone <repository-url>
 
-git checkout -b feature/employee-module
+git checkout -b feature/module-name
 
 git add .
 
-git commit -m "Added employee module"
+git commit -m "Implemented feature"
 
-git push origin feature/employee-module
+git push origin feature/module-name
 ```
 
 ---
 
-## Author
+# 👨‍💻 Author
 
-Vasim Abu
+**Vasim Abu**
 
-```
+Full Stack Developer
 
-### If you're uploading this to GitHub
+---
 
-1. Create a file named `README.md` in the project root.
-2. Paste the content above.
-3. Save it.
-4. Commit and push:
+# 📄 License
 
-```bash
-git add README.md
-git commit -m "Add project README"
-git push origin main
-```
+This project is developed for learning, interview demonstration, and portfolio purposes.
 
-As your project grows, you can also add:
-- Screenshots of the API or UI
-- Database ER diagram
-- Postman collection
-- Swagger/OpenAPI documentation
-- Deployment instructions
-- License information
+---
 
-These additions make the repository much more useful for other developers and interviewers.
+⭐ If you found this project useful, consider giving it a star on GitHub.

@@ -1,7 +1,22 @@
-const { Asset, AssetCategory, Branch } = require("../models");
+const { Asset, AssetCategory, Branch, AssetHistory  } = require("../models");
 
+// exports.createAsset = async (data) => {
+//     return await Asset.create(data);
+// };
 exports.createAsset = async (data) => {
-    return await Asset.create(data);
+
+    const asset = await Asset.create(data);
+
+    
+
+    await AssetHistory.create({
+        asset_id: asset.id,
+        employee_id: null,
+        action: "PURCHASED",
+        remarks: "Asset purchased"
+    });
+
+    return asset;
 };
 
 exports.getAssets = async (search, category, status) => {
@@ -34,7 +49,9 @@ exports.getAssets = async (search, category, status) => {
 };
 
 exports.getAssetById = async (id) => {
-    return await Asset.findByPk(id);
+    return await Asset.findByPk(id, {
+        include: [AssetCategory, Branch]
+    });
 };
 
 exports.updateAsset = async (id, data) => {

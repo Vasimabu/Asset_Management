@@ -1,1 +1,111 @@
-document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".needs-validation").forEach(f=>f.addEventListener("submit",e=>{if(!f.checkValidity()){e.preventDefault();e.stopPropagation()}f.classList.add("was-validated")}))}); const request=async(url,options={})=>{const r=await fetch(url,{headers:{"Content-Type":"application/json",...(options.headers||{})},...options});if(!r.ok)throw new Error("Request failed");return r.json()}; async function loadDashboard(){return request("/api/stocks/summary")} async function loadRecentActivity(){return request("/api/asset-history")} async function loadBranchSummary(){return request("/api/stocks")} async function loadEmployees(){return request("/api/employees")} async function searchEmployees(){return loadEmployees()} async function addEmployee(data){return request("/api/employees",{method:"POST",body:JSON.stringify(data)})} async function updateEmployee(id,data){return request("/api/employees/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteEmployee(id){return request("/api/employees/"+id,{method:"DELETE"})} async function viewEmployee(id){return request("/api/employees/"+id)} async function loadCategories(){return request("/api/asset-categories")} async function searchCategories(){return loadCategories()} async function createCategory(data){return request("/api/asset-categories",{method:"POST",body:JSON.stringify(data)})} async function updateCategory(id,data){return request("/api/asset-categories/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteCategory(id){return request("/api/asset-categories/"+id,{method:"DELETE"})} async function loadAssets(){return request("/api/assets")} async function searchAssets(){return loadAssets()} async function viewAsset(id){return request("/api/assets/"+id)} async function createAsset(data){return request("/api/assets",{method:"POST",body:JSON.stringify(data)})} async function updateAsset(id,data){return request("/api/assets/"+id,{method:"PUT",body:JSON.stringify(data)})} async function deleteAsset(id){return request("/api/assets/"+id,{method:"DELETE"})} async function loadStock(){return request("/api/stocks")} async function searchEmployee(){return request("/api/employees")} async function searchAsset(){return request("/api/assets")} async function issueAsset(data){return request("/api/asset-issues",{method:"POST",body:JSON.stringify(data)})} async function loadIssuedAssets(){return request("/api/asset-issues")} async function returnAsset(data){return request("/api/asset-returns",{method:"POST",body:JSON.stringify(data)})} async function scrapAsset(id,data){return request("/api/assets/"+id+"/scrap",{method:"PUT",body:JSON.stringify(data)})} async function loadAssetHistory(id){return request("/api/asset-history/"+id)} async function searchHistory(){return request("/api/asset-history")}
+const request = async (url, options = {}) => {
+  const response = await fetch(url, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options
+  });
+  const result = await response.json();
+  if (!response.ok || !result.success) throw new Error(result.message || "Request failed");
+  return result;
+};
+
+const text = (value) => value ?? "—";
+
+const loadIssueFormData = async () => {
+  const assetSelect = document.getElementById("issueAsset");
+  const employeeSelect = document.getElementById("issueEmployee");
+
+  if (assetSelect) {
+    try {
+      const { data: assets } = await request("/api/stocks");
+      assetSelect.replaceChildren(new Option("Select an available asset", ""));
+      (assets || []).forEach((asset) => {
+        assetSelect.add(new Option(`${asset.asset_name} (${asset.asset_id})`, asset.id));
+      });
+    } catch (err) {
+      console.error("Failed to load available assets:", err);
+    }
+  }
+
+  if (employeeSelect) {
+    try {
+      const { data: employees } = await request("/api/employees?status=ACTIVE");
+      employeeSelect.replaceChildren(new Option("Select an employee", ""));
+      (employees || []).forEach((emp) => {
+        const fullName = `${emp.first_name || ""} ${emp.last_name || ""}`.trim();
+        employeeSelect.add(new Option(`${fullName} (${emp.employee_code})`, emp.id));
+      });
+    } catch (err) {
+      console.error("Failed to load employees:", err);
+    }
+  }
+};
+
+const renderIssues = (issues) => {
+  const table = document.getElementById("issueTable");
+  if (!table) return;
+  table.replaceChildren();
+
+  if (!issues || !issues.length) {
+    const row = table.insertRow();
+    const cell = row.insertCell();
+    cell.colSpan = 4;
+    cell.className = "empty";
+    cell.textContent = "No asset issues found.";
+    return;
+  }
+
+  issues.forEach((issue) => {
+    const row = table.insertRow();
+
+    const assetName = issue.Asset?.asset_name || issue.Asset?.asset_id || "—";
+    const empName = issue.Employee ? `${issue.Employee.first_name || ""} ${issue.Employee.last_name || ""}`.trim() : "—";
+
+    const assetCell = row.insertCell();
+    assetCell.innerHTML = `<strong>${esc(assetName)}</strong>`;
+
+    const empCell = row.insertCell();
+    empCell.textContent = text(empName);
+
+    const issueDateCell = row.insertCell();
+    issueDateCell.textContent = fmtDate(issue.issue_date);
+
+    const returnDateCell = row.insertCell();
+    returnDateCell.textContent = fmtDate(issue.expected_return_date);
+  });
+};
+
+const loadIssues = async () => {
+  const { data } = await request("/api/asset-issues");
+  renderIssues(data);
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  setToday("#issueDate");
+  loadIssueFormData();
+  loadIssues().catch((err) => console.error("Issues load error:", err));
+
+  const form = document.getElementById("issueForm");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) return;
+
+      const button = form.querySelector('button[type="submit"]');
+      try {
+        if (button) button.disabled = true;
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        await request("/api/asset-issues", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        location.reload();
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  }
+});
